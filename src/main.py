@@ -55,17 +55,17 @@ DUMMY_DATA = {
 }
 
 
-@app.get("/")
+@app.get("/", description="Index")
 def index():
     return {"Hello": "World"}
 
 
-@app.get("/health")
+@app.get("/health", description="Check helth")
 def health():
     return {"status": "running"}
 
 
-@app.get("/power")
+@app.get("/power", description="Dummy data Route")
 def power():
     return DUMMY_DATA
 
