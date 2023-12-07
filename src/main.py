@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
+import re
+import os
 origins = ["*"]
 
 
@@ -22,6 +23,23 @@ def create_app() -> FastAPI:
 
 
 app = create_app()
+
+
+def convert_to_dict(info_list):
+    # Joining the list elements into a single string
+    info_string = ', '.join(info_list)
+
+    # Using regex to extract values
+    pattern = re.compile(r"(\w+)='([^']+)'")
+    matches = pattern.findall(info_string)
+
+    # Creating a dictionary from the matches
+    info_dict = dict(matches)
+
+    return info_dict
+
+
+SYSTEM_INFO = convert_to_dict(str(os.uname()).split(","))
 
 DUMMY_DATA = {
     "id": 1,
@@ -47,3 +65,8 @@ def health():
 @app.get("/power")
 def power():
     return DUMMY_DATA
+
+
+@app.get("/info", description="Get the server info")
+def info():
+    return SYSTEM_INFO
