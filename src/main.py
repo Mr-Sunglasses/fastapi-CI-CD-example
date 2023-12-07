@@ -1,6 +1,27 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="Demo CI App")
+origins = ["*"]
+
+
+def configure_cors(app: FastAPI) -> None:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+
+def create_app() -> FastAPI:
+    app = FastAPI(title="Demo CI App")
+    configure_cors(app=app)
+
+    return app
+
+
+app = create_app()
 
 DUMMY_DATA = {
     "id": 1,
