@@ -16,4 +16,5 @@ WORKDIR /project
 
 RUN pdm install
 
+EXPOSE 8000
 CMD ["pdm", "run", "start"]
