@@ -2,6 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import re
 import os
+import ssl
+from urllib.request import urlopen
+import json
 origins = ["*"]
 
 
@@ -70,3 +73,14 @@ def power():
 @app.get("/info", description="Get the server info")
 def info():
     return SYSTEM_INFO
+
+
+@app.get("/city/{ip_address}", description="To find geolocation based on an IP address")
+def get_city_name(ip_address):
+    ssl._create_default_https_context = ssl._create_unverified_context
+
+    with urlopen(f"https://geoip.samagra.io/city/{ip_address}") as response:
+        body = response.read()
+    result_dict = json.loads(body.decode('utf-8'))
+    print(result_dict)
+    return result_dict
